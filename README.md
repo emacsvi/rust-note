@@ -13,6 +13,7 @@ Rust 编程语言的目标是，创建一个高度安全和并发的软件系统
 
 ## 项目地址
 - 项目：[https://github.com/emacsvi/rust-note](https://github.com/emacsvi/rust-note)
+- 阅读地址: [http://emacsvi.com/rust-note/](http://emacsvi.com/rust-note/)
 
 ## 学习链接
 
