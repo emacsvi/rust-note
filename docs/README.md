@@ -11,6 +11,9 @@ Rust 编程语言的目标是，创建一个高度安全和并发的软件系统
 数据结构，内存，系统，泛型，依赖注入，trait, fn, mem等  
 并且实例大都采用Docker容器化部署。
 
+- [rust由浅入深学习](std/rust由浅入深学习.md)
+- [rust中的unit-type](std/rust中的unit-type.md)
+
 ## 项目地址
 - 项目：[https://github.com/emacsvi/rust-note](https://github.com/emacsvi/rust-note)
 
