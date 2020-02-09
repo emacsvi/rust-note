@@ -9,3 +9,8 @@
 4. Rust标准库中使用单元类型()的一个例子是HashSet。一个HashSet只不过是HashMap的一个非常简单地包裹，写作：HashMap<T, ()>。HashMap的第二个泛型类型参数即用了单元类型()
 5. 可以用Result<(), MyErrorType>代替Option，某些开发者认为Result<(), MyErrorType>语义上能更简明地表示一个“结果”。
 
+
+
+
+
+[参考]([http://blog.ykyi.net/2019/11/rust%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E5%8D%95%E4%BD%8D%E7%B1%BB%E5%9E%8Bunit-type%E6%98%AF%E4%BB%80%E4%B9%88/](http://blog.ykyi.net/2019/11/rust语言中的单位类型unit-type是什么/))
