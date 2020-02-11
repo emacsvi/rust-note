@@ -79,6 +79,17 @@ regex：/.*node="(.*?)".*/
 - 如果添加多条**Metrics**的时候，**Format**也要一致地为`Table`。
 - 隐藏无用的数据: `Apply to columns named=/.*/ Type=Hidden`
 
+```go
+// 添加A,B,C三个metrics, 并且每一个都选中Instant和Format=Table值
+node_filesystem_size_bytes{instance=~"10.0.20.3:9100", fstype=~"ext4"}-0
+node_filesystem_avail_bytes{instance=~"10.0.20.3:9100", fstype=~"ext4"}-0
+1 - (node_filesystem_avail_bytes{instance=~"10.0.20.3:9100", fstype=~"ext4"} / node_filesystem_size_bytes{instance=~"10.0.20.3:9100", fstype=~"ext4"})
+
+// 增加/.*/ Type=Hidden 隐藏不要的字段
+
+// Value #C 是百分比，Percent(0.0-0.1)  Thresholds=0.3,0.6 Cell
+```
+
 ## 参考文献
 
 - [模板化Dashboard](https://yunlzheng.gitbook.io/prometheus-book/part-ii-prometheus-jin-jie/grafana/templating)
