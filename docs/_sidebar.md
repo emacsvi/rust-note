@@ -13,7 +13,7 @@
   * [](std/)
 
 * go相关的
-  * [prometheus应用](std/prometheus应用.md)
+  * [prometheus应用](go/prometheus应用.md)
   * [](std/)
   * [](std/)
   * [](std/)
