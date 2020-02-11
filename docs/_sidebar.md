@@ -11,18 +11,14 @@
   * [](std/)
   * [](std/)
   * [](std/)
-  * [](std/)
 
-* 框架篇
-  * [mall数据库表结构概览](database/mall_database_overview.md)
-  * [商品模块数据库表解析（一）](database/mall_pms_01.md)
-  * [商品模块数据库表解析（二）](database/mall_pms_02.md)
-  * [订单模块数据库表解析（一）](database/mall_oms_01.md)
-  * [订单模块数据库表解析（二）](database/mall_oms_02.md)
-  * [订单模块数据库表解析（三）](database/mall_oms_03.md)
-  * [营销模块数据库表解析（一）](database/mall_sms_01.md)
-  * [营销模块数据库表解析（二）](database/mall_sms_02.md)
-  * [营销模块数据库表解析（三）](database/mall_sms_03.md)
+* go相关的
+  * [prometheus应用](std/prometheus应用.md)
+  * [](std/)
+  * [](std/)
+  * [](std/)
+  * [](std/)
+  * [](std/)
 
 * 技术要点篇
   * [MyBatis Generator使用过程中踩过的一个坑](technology/mybatis_mapper.md)
