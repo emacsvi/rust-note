@@ -194,6 +194,10 @@ histogram_quantile(
 ```
 最后，我推荐配置 Grafana 来向你的 Prometheus 服务器查询指标。Grafana 是一个令人惊叹的开源可视化解决方案，它能帮助你把 Prometheus 统计数据变成漂亮的可操作的面板。这里有一些用这种方式创建出的面板。
 
+# 汇总
+
+
+
 # 参考链接
 - [prometheus示例](https://studygolang.com/articles/17959)
 - [github 仓库](https://github.com/scotwells/prometheus-by-example/tree/master/job-processor)
@@ -201,4 +205,5 @@ histogram_quantile(
 # 效果图
 
 ![](images/jobs-processor.png)
-![](../../images/jobs-processor.png)
+![](images/jobs-processor-metrics01.png)
+![](images/jobs-processor-metrics02.png)
