@@ -6,6 +6,82 @@ prometheus相关的一些使用。
 
 ## Grafana使用
 
+### Granfana启动
+[参考这里](https://www.cnblogs.com/woshimrf/p/docker-grafana.html)先普通启动，然后把配置文件导出来，修改配置文件，挂载到etc下 [grafana配置](https://grafana.com/docs/grafana/latest/installation/docker/)
+```bash
+## 普通启动，挂载数据盘
+docker run  -d --name grafana -p 3000:3000   -v /data/grafana:/var/lib/grafana  grafana/grafana
+
+## 复制出配置文件
+docker cp grafan:/etc/grafana/grafana.ini /data/grafana-data/etc/
+## 修改配置文件，比如加上域名，比如修改端口为80，比如。。。
+
+
+## kill重启
+docker kill grafana
+docker rm grafana
+docker run --user root  -d --name grafana -p 3000:3000  -v /data/grafana-data/etc:/etc/grafana/ -v /data/grafana-data/grafana:/var/lib/grafana  grafana/grafana
+
+
+docker run --user root  -d --name grafana -p 3000:3000  -v /data/opt/monitor/grafana-data/etc:/etc/grafana/ -v /data/opt/monitor/grafana-data/grafana:/var/lib/grafana  grafana/grafana
+
+# 实际中，由于我的用户id是1000，所以--user 1000才是对的
+docker run --user 1000 -d --name jk -p 3000:3000 -v /home/xjgw/jk_conf/etc:/etc/grafana/ -v /home/xjgw/jk_conf/data/grafana:/var/lib/grafana grafana/grafana:6.6.0-ubuntu
+```
+
+### Grafana 配置文件
+
+**匿名访问**:
+
+```ini
+#如果要隐藏登录页面，请执行此配置
+[auth]
+# Set to true to disable (hide) the login form, useful if you use OAuth
+#disable_login_form = false 
+disable_login_form = true
+# 更改disable_login_form到true
+
+# 启用匿名访问
+[auth.anonymous]
+# enable anonymous access 
+enabled = true
+# 3.指定组织
+# specify organization name that should be used for unauthenticated users
+org_name = YOUR_ORG_NAME_HERE  
+# 我是在这儿遇到的坑， 因为自定义的组织名称没有在项目中定义， 所以开始匿名登录之后一直需要登录
+# 最后通过查看日志log文件看到有这么一句话，
+# msg="Anonymous access organization error: 'My org.': Organization not found"
+# 原来是组织名称没有定义 ，
+# 解决方案：
+# 使用admin登录进去之后，修改了组织的名称， 保存，就OK了
+
+#重新启动grafana，你应该能够看到grafana（如果你没有看到dasboard，只需将你的组织角色Viewer改为Editor 进行编辑)
+# specify role for unauthenticated users
+org_role = Viewer
+
+
+[users]
+# ：是否允许普通用户登录，如果设置为false，则禁止用户登录，默认是true，则admin可以创建用户，并登录grafana
+allow_sign_up = false 
+#：如果设置为false，则禁止用户创建新组织，默认是true
+allow_org_create = false 
+# ：当设置为true的时候，会自动的把新增用户增加到id为1的组织中，当设置为false的时候，新建用户的时候会新增一个组织
+auto_assign_org = false
+# 新建用户附加的规则，默认是Viewer，还可以是Admin、Editor
+auto_assign_org_role = Viewer
+```
+
+### Grafana的配置
+
+**导出数据**：
+
+`进入Dashboard然后点分享那个图标`->`然后点Export`->`Save to file`
+
+```docker
+docker cp 15da63:/var/lib/grafana .
+docker cp 15da63:/etc/grafana/grafana.ini .
+```
+
 ### 每一个单词意思
 
 其实我觉得除了 Variables 比较难理解，其他可能都是英文障碍吧，每个选项慢慢抠，都能理解。所以最后列出学习过程出现的单词及其理解。
@@ -70,6 +146,53 @@ query_result(label_replace(kube_pod_info{pod=~"$pod"}, "node", "10.20.15.$1", "n
 // 通过正则从返回结果中匹配出所需要的ip地址
 regex：/.*node="(.*?)".*/
 ```
+
+**寻找最大分布变量**:
+
+```go
+// 1. 定义一个最大分区变量 maxmount 用query_result来查找最大分区
+// General 的时候Hide选择Variable
+Query = 
+query_result(topk(1,sort_desc (max(node_filesystem_size_bytes{instance=~'$node',fstype=~"ext4|xfs"}) by (mountpoint))))
+
+// 结果是： {mountpoint="/data/filecoin"} 83661774925824 1581487221000
+
+Regex = 
+/.*\"(.*)\".*/
+
+// 所以正则将双引号的内容提取出来：/data/filecoin 目录
+
+
+// 2. 定义一个Singlestat来显示它
+// 接下来可以在任意地方用maxmount这个分区了
+Metrics=100 - ((node_filesystem_avail_bytes{instance=~"$node",mountpoint="$maxmount",fstype=~"ext4|xfs"} * 100) / node_filesystem_size_bytes {instance=~"$node",mountpoint="$maxmount",fstype=~"ext4|xfs"})
+Min step = 10s
+
+Show = Current
+Thresholds = 70,90
+Unit = percent(0-100)
+Coloring = Value(Enable)
+Spark Lines = Show(Enable)
+
+// 3. 再增加一个Gauge仪表盘 将其框起来
+
+// 4. Title = 最大分区($maxmount)使用率
+Title = 最大分区($maxmount)使用率
+Repeat = Disabled
+
+// 在标题中也可以使用变量
+
+```
+
+### SingleStat
+[singleStat很详细](https://ngx.hk/2018/03/15/grafana%E4%B8%ADsinglestat%EF%BC%88%E7%8A%B6%E6%80%81%E5%9B%BE%EF%BC%89%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3.html)
+SingleStat用得比较多，这里需要说明一些配置选项。
+
+- Show: 选择读取数据的统计类型，可选择当前，最后，最大，最小，平均或者总计等。
+- Prefix: 前缀，手动输入内容
+- Postfix: 后缀，手动输入内容
+- Unit： 单位
+- Decimals: 小数位
 
 ### Table
 制定表格举例，比如例出所有磁盘分区的使用空间情况 。
