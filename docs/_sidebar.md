@@ -14,11 +14,15 @@
 
 * go相关的
   * [prometheus应用](go/prometheus应用.md)
-  * [](std/)
-  * [](std/)
-  * [](std/)
-  * [](std/)
-  * [](std/)
+  * [prometheus一个简单示例](go/prometheus一个简单示例.md)
+  * [](go/)
+  * [](go/)
+  * [](go/)
+  * [](go/)
+
+* 其他相关的
+  * [git常用命令](other/git.md)
+  * [](other/)
 
 * 技术要点篇
   * [MyBatis Generator使用过程中踩过的一个坑](technology/mybatis_mapper.md)
