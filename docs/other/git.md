@@ -16,15 +16,19 @@ Git文件三个空间
 - 对象库(git的版本控制系统中)
 
 版本管理
+```bash
 - git add(放入暂存中)
 - git commit(放入版本控制系统中)
 - git rm(删除)
+```
 
 查看信息
+```
 - git help
 - git log
 - git diff
 - git status
+```
 
 git配置,优先级是越是下面越高
 对于`user.name`,`user.email`有三个地方可以设置
@@ -61,6 +65,7 @@ git config --local user.email 'liwei@gmail.com'
 `git commit --amend -m "222222"` 这样是一次提交。并不会在log里面产生两条提交信息
 
 **git log查看提交历史**:
+```bash
 - git log
 - git log --graph
 - git log -3(-n) 仅显示最近的n次更新
@@ -69,6 +74,7 @@ git config --local user.email 'liwei@gmail.com'
 - git log --stat 仅显示简要的增发行数统计
 - git log --graph --abbrev-commit
 - git log --graph --abbrev-commit --pretty=oneline
+```
 
 
 场景1：修改之后，还未曾提交到stag之中，就取消修改：
@@ -101,9 +107,9 @@ git config --system --list
 
 ## .gitignore
 
-- vi .gitignore 将文件及目录添加到这个内容中
-- git add .gitignore
-- git commit -m "add .gitignore"
+- `vi .gitignore` 将文件及目录添加到这个内容中
+- `git add .gitignore`
+- `git commit -m "add .gitignore"`
 
 
 **语法规范**支持正则表达式以及通配符, 主要是为了增加忽略的文件及文件夹的：
@@ -132,6 +138,7 @@ doc/**/*.pdf
 ## 分支
 
 常用命令：
+```bash
 - git branch 查看本地分支
 - git branch -r 查看远程分支
 - git branch [name] 创建本地分支，注意新分支创建后不会自动切换为当前分支
@@ -148,6 +155,7 @@ doc/**/*.pdf
 - git branch -v 当前分支提交的最新的一条历史记录
 - git push origin [name] 创建远程分支(本地分支push到远程)
 - git push origin :heads/[name] 删除远程分支
+```
 
 我从master分支创建了一个issue5560分支，做了一些修改后，使用git push origin master提交，但是显示的结果却是'Everything up-to-date'，发生问题的原因是git push origin master 在没有track远程分支的本地分支中默认提交的master分支，因为master分支默认指向了origin master 分支，这里要使用git push origin issue5560：master 就可以把issue5560推送到远程的master分支了。
 
@@ -160,11 +168,13 @@ doc/**/*.pdf
 
 ## 回退
 
+```bash
 - git reset --hard HEAD^
 - git reset --hard HEAD^^
 - git reset --hard HEAD~1
 - git reset --hard commit-id
 - git reflog # 查看操作日志，来回退到最新的版本
+```
 
 ## checkout
 checkout作用：discard掉相对于暂存区中最后一个添加的文件内容所做的变更。
@@ -176,6 +186,7 @@ detached 游离分支的意思，最好的新建一个分支进行保存
 如果你正在你的dev分支上面做开发，突然有个bug提交过来，你需要切换到另外一个master分支上做修改。
 此时你当前dev分支上面的修改还不应该commit提交，而需要暂时隐藏存储起来stash，事后再恢复。所以你需要用到stash命令。
 
+```bash
 - git stash save '' # 隐藏存储
 - git stash save 'hello basic'
 - git stash list # 查看记录
@@ -183,6 +194,7 @@ detached 游离分支的意思，最好的新建一个分支进行保存
 - git stash apply 将之前的恢复，但是并不删除之前保存的状态
 - git stash apply stash@{0} 恢复但是不删除，需要用drop手动删除
 - git stash drop stash@{0}
+```
 
 ## 什么是快照
 
@@ -203,6 +215,7 @@ tag就是给commit的hash校验和取的一个名字，比较直观，方便记�
 branch是一个分支
 tag是分支上的一个里程碑，一个点
 
+```bash
 - git tag 查看标签
 - git tag [name] 创建标签
 - git tag -d [name] 删除标签
@@ -211,18 +224,21 @@ tag是分支上的一个里程碑，一个点
 - git tag -l "v2*" 查询标签
 - git push origin [name] 创建远程标签(本地标签push到远程)
 - git push origin :refs/tags/[name] 删除远程标签
+```
 
 
 ## blame
-git blame [文件名] 查看文件的修改记录
+`git blame [文件名]` 查看文件的修改记录
 
 ## diff
 先明白linux命令的diff每一个含义，才能明白`git diff`的结果含义。
 
+```bash
 - git diff: 比较的是暂存区与工作区文件之间的差别。
 - git diff [commit_id] 比较commit与工作区的区别。
 - git diff HEAD 比较当前最新的版本与当前工作区的区别。
 - git diff --cached commit_id 比较commit上面与暂存区的区别。
+```
 
 
 ## 远程remote
@@ -239,8 +255,9 @@ git blame [文件名] 查看文件的修改记录
 如果之前提交的帐户信息有误，希望修改可以使用--reset-author
 ```git
 git log
-git config --local user.name "xxx"
-git config --local user.email "xxx"
+git config --local user.name "李伟"
+git config --local user.email "liweilijie@gmail.com"
+git config --local --list
 git commit --amend --reset-author # 修改提交的帐户信息
 git config --unset  user.mail # 删除一个key
 git commit -am "info" # -am 是 add+commit的组合 
@@ -248,10 +265,11 @@ git commit -am "info" # -am 是 add+commit的组合
 
 ## 远程操作
 
+
 由于本地仓库可以与远程仓库进行一对多的关联，你可以推送到多个远程仓库中。所以查看远程仓库的命令: `git remote show`
 
-- git remote show
-- git remote show origin # 列出与origin关联的远程仓库的详细信息
+- `git remote show`
+- `git remote show origin` # 列出与origin关联的远程仓库的详细信息
 
 开发模型：
 - Gitflow
@@ -264,7 +282,86 @@ git commit -am "info" # -am 是 add+commit的组合
 ## 协同工作
 
 
+## 别名
+实际上是在`~/.gitconfig`里面增加一个`alias`目录项
+```bash
+git config --global alias.st status
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.unstage 'reset HEAD'
+```
 
+运行一个外部命令：加一个`!`就不会运行`git gitk`而是直接运行`gitk`
+```bash
+git config --global alias.ui '!gitk'
+```
+
+## refspec
+
+`git push`的完全写法：`git push origin source-branch:destination-branch`
+
+本地与远程对应的实际原理。
+
+**将本地的develop推送到远程**:
+```bash
+# 在本地创建两个分支
+git branch -b develop
+git branch -b test
+git checkout develop
+git branch -av
+git push # 会提示出错，因为develop没有upstream上游分支
+# 将远程的develop与本地的develop对应
+git push --set-upstream origin develop
+# 也可以用`-u`来做，一样的
+git push -u origin develop
+
+
+# 下面这条命令是将本地的develop分支推送到远程的develop2上面，相当于重命名
+git push --set-upstream origin develop:develop2
+# 重命名之后，git push会出错，因为它默认是以develop名称来提交的。所以需要如下命令
+# 因为经过上面的设置之后，HEAD就指向develop远程分支
+git push origin HEAD:develop2
+# 更完整的写法：
+git push origin develop:develop2
+
+git checkout test
+git push -u origin test
+```
+
+**另外一个人也pull该develop分支**:
+```bash
+# pull会拉取所有远程的分支等信息。但是都是与origin/develop进行绑定的
+git pull
+
+# 拉完了可以查看,查看到有一个remotes/origin/develop分支
+git branch -av
+
+# 本地想捡出develop分支一定要用如下方式
+git branch -b develop origin/develop
+# 也可以用`--track`也是一样的功能
+git checkout --track origin/develop
+git branch -av
+
+git checkout --track origin/test
+```
+
+**删除远程分支**:
+```bash
+# 推送的时候源分支给个空的就可以了
+git push origin :develop
+# 也可以这样删除
+git push origin --delete develop
+```
+**重命名远程分支**:
+```bash
+# 重命名本地分支
+git branch -m develop2 develop
+
+# 重命名远程分支
+# 先删除 再重新建
+git push origin --delete develop2
+git push --set-upstream origin develop
+```
 
 
 
