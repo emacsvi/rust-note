@@ -299,6 +299,13 @@ git config --global alias.ui '!gitk'
 ## refspec
 
 `git push`的完全写法：`git push origin source-branch:destination-branch`
+- source-branch: 表示本地分支
+- destination-branch: 表示远程分支
+
+`git pull`的完全写法：`git pull origin source-branch:destination-branch` 刚好与push相反
+- source-branch: 表示远程分支
+- destination-branch: 表示本地分支
+
 
 本地与远程对应的实际原理。
 
@@ -343,6 +350,9 @@ git checkout --track origin/develop
 git branch -av
 
 git checkout --track origin/test
+
+# 将远程分支拉取到本地
+git pull origin develop:develop
 ```
 
 **删除远程分支**:
@@ -351,6 +361,10 @@ git checkout --track origin/test
 git push origin :develop
 # 也可以这样删除
 git push origin --delete develop
+
+# 在另外一个人的仓库里面该远程分支依然存在，可以用git remote show origin查看它的状态
+# 用如下命令可以删除本地与远程分支上的不同步情况
+git remote prune
 ```
 **重命名远程分支**:
 ```bash
@@ -363,5 +377,58 @@ git push origin --delete develop2
 git push --set-upstream origin develop
 ```
 
+## HEAD 标记
+
+- **HEAD**文件是一个指向你当前所在**分支**的引用**标识符** 同一时刻只指向一个分支点。该文件内部并不包含SHA-1值，而是一个指向另外一个引用的指针
+- 当执行`git commit`命令时，git会创建一个`commit`对象，并且将这个commit对象的parent指针设置为HEAD所指向 
+的引用的SHA-1值。
+- 我们对于`HEAD`修改的任何操作，都会被`git reflog`完整记录下来。
+- 底层命令`git symbolic-ref HEAD` 可以读取`HEAD`的值
+- 写入的命令：`git symbolic-ref HEAD refs/heads/develop`
+
+
+## 远程标签
+
+标签本质是静态的，是对应到某一次commitID上的，是不能改变的，你通过标签可以回到这个标记的地方。
+本质就是对应一个SHA-1值而已。
+
+**如何将本地标签推送到远程**
+
+```bash
+# 先在本地创建几个标签
+git tag v1.0.0
+git tag -a v2.0.0 -m 'v2.0.0 released'
+git tag -a v3.0.0 -m 'v3.0.0 released'
+git tag
+# 显示标签详细的内容
+git show v2.0.0
+git show v1.0.0
+
+# 默认情况git push并不会推送标签的信息
+# push特定的标签
+git push origin v1.0.0
+git push origin v1.0.0 v2.0.0
+
+# push all tags 将本地未推送的都推送到远程
+git push origin --tags
+
+# 最最完整的将本地标签推送到远程标签的写法
+git push origin refs/tags/v3.0.0:refs/tags/v3.0.0
+
+# pull tags
+git pull
+```
+
+**删除标签**:
+```bash
+# 删除远程标签v3.0.0 也就是左边是空的就是删除
+git push origin :refs/tags/v3.0.0
+
+# 新的删除命令delete
+git push origin --delete tag v3.0.0
+
+# 但是本地还存在，删除本地用-d
+git tag -d v3.0.0
+```
 
 
