@@ -6,9 +6,17 @@ prometheus相关的一些使用。
 
 ## Grafana使用
 
+[官方有详细的参数设置](https://grafana.com/docs/grafana/latest/installation/configure-docker/)
+
+[修改登陆密码](https://cloud.tencent.com/developer/article/1440383)
+
 ### Granfana启动
 [参考这里](https://www.cnblogs.com/woshimrf/p/docker-grafana.html)先普通启动，然后把配置文件导出来，修改配置文件，挂载到etc下 [grafana配置](https://grafana.com/docs/grafana/latest/installation/docker/)
+
+发现文件夹权限有问题，修改一下权限。[chmod 777 data](https://www.cnblogs.com/zqyx/p/10108150.html)
 ```bash
+# 修改一下权限
+chomd -R 777 data
 ## 普通启动，挂载数据盘
 docker run  -d --name grafana -p 3000:3000   -v /data/grafana:/var/lib/grafana  grafana/grafana
 
@@ -27,6 +35,12 @@ docker run --user root  -d --name grafana -p 3000:3000  -v /data/opt/monitor/gra
 
 # 实际中，由于我的用户id是1000，所以--user 1000才是对的
 docker run --user 1000 -d --name jk -p 3000:3000 -v /home/xjgw/jk_conf/etc:/etc/grafana/ -v /home/xjgw/jk_conf/data/grafana:/var/lib/grafana grafana/grafana:6.6.0-ubuntu
+
+# 启动
+docker rm -f gra
+
+# 最终的启动命令
+docker run -d --name gra --user $(id -u):$(id -g) --restart=always -p 3000:3000 -e "GF_SECURITY_ADMIN_PASSWORD=xjgw!234" -v "$(pwd)"/data:/var/lib/grafana:rw -v "$(pwd)"/data/grafana-data/etc:/etc/grafana:rw docker.io/grafana/grafana:6.7.0-ubuntu
 ```
 
 ### Grafana 配置文件
