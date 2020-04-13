@@ -42,6 +42,48 @@ fn dangle() -> String {
 }
 ```
 
+## struct
+
+- 关联函数：允许在impl块中定义不以`self`作为参数的函数。被称为关联函数，因为它们与结构体相关联。他们仍是函数不是方法。
+- 关联函数位于结构体的命名空间中。
+- **::**语法用于关联函数,枚举成员和模块创建的命名空间中。
+
+
+## enumerations
+也称为**enums**。允许你通过列举可能的成员(`variants`)来定义一个类型。
+```rust
+enum IpAddrKind {
+  V4,
+  V6
+}
+
+let four = IpAddrKind::V4;
+let six = IpAddrKind::V6;
+
+fn route(ip_type: IpAddrKind) {}
+
+struct IpAddr {
+  kind: IpAddrKind,
+  address: String,
+}
+
+let localhost = IpAddr {
+  kind: IpAddrKind::V4,
+  address: String::from("127.0.0.1"),
+}
+```
+
+## String
+```rust
+let s1 = String::from("Hello ");
+let s2 = String::from("world!");
+let s3 = s1 + &s2; // 注意s1 被移动了，不能继续使用
+```
+`+`的函数签名是：`fn add(self, s: &str) -> String();`
+
+- 强转(coerced), 将&String coerced &str
+- 解引用强制多态(deref coercion)的技术: 它把&s2 变成&s2[..]
+
 ## 参考文献
 
 - [所有权相关](https://kaisery.gitbooks.io/trpl-zh-cn/content/ch04-01-what-is-ownership.html)
